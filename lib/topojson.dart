@@ -114,3 +114,8 @@ void _reverse<T>(List<T> array, int n) {
     array[j] = t;
   }
 }
+
+dynamic toGeoJson(dynamic topoJson) => {
+      "features": [feature(topoJson, topoJson['objects']['area'])],
+      "type": "FeatureCollection",
+    };

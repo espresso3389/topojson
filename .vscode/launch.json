@@ -8,8 +8,7 @@
             "name": "topojson",
             "request": "launch",
             "type": "dart",
-            "program": "./topojson_example.dart",
-            "cwd": "./example/"
+            "program": "example/topojson_example.dart",
         }
     ]
 }
