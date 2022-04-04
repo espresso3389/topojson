@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io' as io;
 
 import 'package:http/http.dart' as http;
-import 'package:topojson/topojson.dart';
 import 'package:test/test.dart';
+import 'package:topojson/topojson.dart';
 
 void main() {
   group('A group of tests', () {
@@ -14,10 +14,8 @@ void main() {
           'https://geoshape.ex.nii.ac.jp/jma/resource/AreaInformationCity_landslide/20210518/4220201.topojson'));
       final topoJson = jsonDecode(utf8.decode(resp.bodyBytes));
 
-      final f = toGeoJson(topoJson);
-      final geoJson = jsonEncode(f);
+      TopoJson.fromJson(topoJson);
 
-      await io.File('output.geojson').writeAsString(geoJson);
       expect(Future.value(0), completes);
     });
   });
