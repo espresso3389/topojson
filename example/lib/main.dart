@@ -8,7 +8,7 @@ import 'package:topojson/topojson.dart';
 
 void main() async {
   final resp = await http.get(Uri.parse(
-      'https://geoshape.ex.nii.ac.jp/jma/resource/AreaInformationCity_landslide/20210518/4220201.topojson'));
+      'https://geoshape.ex.nii.ac.jp/jma/resource/AreaInformationCity_weather/20220324/3421300.topojson'));
   final json = jsonDecode(utf8.decode(resp.bodyBytes));
   final tj = TopoJson.fromJson(json);
 
@@ -55,14 +55,13 @@ class TopoJsonPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     for (final object in topojson.visitAllObjects()) {
       if (object.type == TopoJsonObjectType.polygon) {
-        final paint = Paint()
-          ..color = Colors.redAccent
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 0.5;
+        final paint = Paint()..strokeWidth = 0.5;
         // Draw as if lat/lng values were in cartesian coordinate system
-        for (final ring in (object as TopoJsonPolygon).rings) {
-          canvas.drawPoints(
-              PointMode.polygon,
+        final path = Path();
+        final rings = (object as TopoJsonPolygon).rings;
+        for (int i = 0; i < rings.length; i++) {
+          final ring = rings[i];
+          path.addPolygon(
               ring.points
                   .map((p) => Offset(
                         (p[0].toDouble() - rect.left) / rect.width * size.width,
@@ -71,8 +70,16 @@ class TopoJsonPainter extends CustomPainter {
                             size.height,
                       ))
                   .toList(),
-              paint);
+              true);
         }
+        paint
+          ..color = Colors.green
+          ..style = PaintingStyle.fill;
+        canvas.drawPath(path, paint);
+        paint
+          ..color = Colors.redAccent
+          ..style = PaintingStyle.stroke;
+        canvas.drawPath(path, paint);
       }
     }
   }
